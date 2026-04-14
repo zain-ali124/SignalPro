@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 const path = require("path");
+const fs = require('fs');
 
 const { errorHandler, notFound } = require("./src/middlewares/errorHandler");
 const { multerErrorHandler } = require("./src/middlewares/uploadMiddleware");
@@ -91,6 +92,20 @@ app.use("/api/users",    userRoutes);
 app.use("/api/signals",  signalRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/admin",    adminRoutes);
+
+// ── Serve client build in production (if present) ─────────────────
+if (process.env.NODE_ENV === 'production') {
+  const clientBuildPath = path.join(__dirname, '..', 'client', 'dist');
+  if (fs.existsSync(clientBuildPath)) {
+    app.use(express.static(clientBuildPath));
+
+    // Serve index.html for any non-API route so client-side routing works
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith('/api')) return next();
+      res.sendFile(path.join(clientBuildPath, 'index.html'));
+    });
+  }
+}
 
 // ── 404 & Error Handlers ───────────────────────────
 app.use(notFound);
