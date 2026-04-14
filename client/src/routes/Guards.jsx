@@ -15,6 +15,13 @@ export const PrivateRoute = ({ children }) => {
   return user ? children : <Navigate to="/" replace />
 }
 
+// ── Public route: redirect logged-in users away from public pages ──
+export const PublicRoute = ({ children }) => {
+  const { user, loading } = useAuth()
+  if (loading) return <Spinner />
+  return user ? <Navigate to="/dashboard" replace /> : children
+}
+
 // ── Requires admin role ───────────────────────────
 export const AdminRoute = ({ children }) => {
   const { user, loading } = useAuth()

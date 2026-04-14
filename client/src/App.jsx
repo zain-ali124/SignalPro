@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { ThemeProvider, useTheme } from './context/ThemeContext'
 import { AuthProvider } from './context/AuthContext'
-import { PrivateRoute, AdminRoute } from './routes/Guards'
+import { PrivateRoute, AdminRoute, PublicRoute } from './routes/Guards'
 
 // Layout
 import DashboardLayout from './components/layout/DashboardLayout'
@@ -53,7 +53,7 @@ export default function App() {
           <ToasterWrapper />
           <Routes>
             {/* Public */}
-            <Route path="/"                 element={<Home />} />
+            <Route path="/"                 element={<PublicRoute><Home /></PublicRoute>} />
             <Route path="/login"            element={<Login />} />
             <Route path="/register"         element={<Register />} />
             <Route path="/forgot-password"  element={<ForgotPassword />} />
