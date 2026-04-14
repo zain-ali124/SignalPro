@@ -74,6 +74,17 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+// ── Root: redirect to frontend in production or show a simple API message ──
+app.get('/', (req, res) => {
+  if (process.env.NODE_ENV === 'production' && process.env.CLIENT_URL) {
+    return res.redirect(process.env.CLIENT_URL);
+  }
+  res.status(200).json({
+    success: true,
+    message: 'Trading Signal Platform API. Visit frontend at ' + (process.env.CLIENT_URL || 'http://localhost:5173'),
+  });
+});
+
 // ── API Routes ─────────────────────────────────────
 app.use("/api/auth",     authRoutes);
 app.use("/api/users",    userRoutes);
