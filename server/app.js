@@ -96,7 +96,10 @@ app.use("/api/admin",    adminRoutes);
 // ── Serve client build in production (if present) ─────────────────
 if (process.env.NODE_ENV === 'production') {
   const clientBuildPath = path.join(__dirname, '..', 'client', 'dist');
+  console.log('Checking for client build at', clientBuildPath);
   if (fs.existsSync(clientBuildPath)) {
+    const files = fs.readdirSync(clientBuildPath).slice(0, 30);
+    console.log('Serving client build. Top-level files:', files);
     app.use(express.static(clientBuildPath));
 
     // Serve index.html for any non-API route so client-side routing works
@@ -104,6 +107,8 @@ if (process.env.NODE_ENV === 'production') {
       if (req.path.startsWith('/api')) return next();
       res.sendFile(path.join(clientBuildPath, 'index.html'));
     });
+  } else {
+    console.warn('Client build not found at', clientBuildPath, '- frontend will not be served by backend.');
   }
 }
 
