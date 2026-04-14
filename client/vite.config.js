@@ -3,10 +3,8 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base:{
-    development: '/',
-    production: '/client/'
-  },
+  // Base must be a string. Using '/' so assets are served from site root.
+  base: '/',
   server: {
     port: 5173,
     proxy: {
